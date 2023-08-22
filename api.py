@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_file
 from flask_restful import Resource, Api, reqparse, abort, marshal, fields
 from flask_cors import CORS
 
@@ -7,10 +7,18 @@ CORS(app)
 api = Api(app)
 
 
-@app.route('/', method=['GET'])
+@app.route('/', methods=['GET'])
 def hello():
     text = "Hello world!"
     return jsonify({"message": text})
+
+
+@app.route('/hello')
+def logo():
+
+    logo = './logo.svg'
+
+    return send_file(logo)
 
 
 if __name__ == '__main__':
