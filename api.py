@@ -1,25 +1,71 @@
-from flask import Flask, jsonify, send_file
-from flask_restful import Resource, Api, reqparse, abort, marshal, fields
+import os
+import re
+from flask import Flask, jsonify, Blueprint
 from flask_cors import CORS
-
-app = Flask(__name__)
-CORS(app)
-api = Api(app)
+from natsort import natsorted
 
 
-@app.route('/', methods=['GET'])
-def hello():
-    text = "Hello world!"
-    return jsonify({"message": text})
+def create_app():
+    app = Flask(__name__)
+    CORS(app)
 
+    working_directory = os.getcwd()
+    weddings_directories = os.scandir('./assets/weddings')
 
-@app.route('/hello')
-def logo():
+    @app.route('/', methods=['GET'])
+    def hello():
+        text = "Hello there!"
+        return jsonify({"message": text})
 
-    logo = './logo.svg'
+    def generate_endpoint(endpoint, data):
+        def dynamic_endpoint():
+            return data
+        dynamic_endpoint.__name__ = f"{endpoint}"
+        app.add_url_rule(endpoint, view_func=dynamic_endpoint)
 
-    return send_file(logo)
+    def get_weddings(couple):
+        files = []
+        file_path = f"{working_directory}/assets/weddings/{couple}"
+
+        for images in os.scandir(file_path):
+            if images.is_file():
+                files.append(images.path)
+
+        sorted_files = natsorted(files)
+        couples = {couple: sorted_files}
+
+        return jsonify({"couple": couples})
+
+    dynamic_routes_bp = Blueprint('dynamic_routes', __name__)
+
+    with app.app_context():
+        for index, couple in enumerate([*weddings_directories], start=1):
+            dir_name = re.search('[^/]+$', couple.path).group(0)
+            url = '/' + dir_name.lower().replace(' ', '-')
+            generate_endpoint(url, get_weddings(dir_name))
+
+    app.register_blueprint(dynamic_routes_bp)
+
+    @app.route('/portfolio', methods=['GET'])
+    def couples():
+        couples = []
+
+        for couple in weddings_directories:
+            dir_name = re.search('[^/]+$', couple.path).group(0)
+            cover_image = working_directory + \
+                couple.path.replace('.', '') + '/Cover/cover.jpg'
+
+            data = {
+                "name": dir_name,
+                "cover_image": cover_image
+            }
+            couples.append(data)
+
+        return jsonify({"couples": couples})
+
+    return app
 
 
 if __name__ == '__main__':
+    app = create_app()
     app.run(host="0.0.0.0", port=5000)
