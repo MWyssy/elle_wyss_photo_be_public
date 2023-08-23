@@ -10,7 +10,6 @@ def create_app():
     CORS(app)
 
     working_directory = os.getcwd()
-    weddings_directories = os.scandir('./assets/weddings')
 
     @app.route('/', methods=['GET'])
     def hello():
@@ -39,7 +38,7 @@ def create_app():
     dynamic_routes_bp = Blueprint('dynamic_routes', __name__)
 
     with app.app_context():
-        for index, couple in enumerate([*weddings_directories], start=1):
+        for index, couple in enumerate(os.scandir('./assets/weddings'), start=1):
             dir_name = re.search('[^/]+$', couple.path).group(0)
             url = '/' + dir_name.lower().replace(' ', '-')
             generate_endpoint(url, get_weddings(dir_name))
@@ -50,7 +49,7 @@ def create_app():
     def couples():
         couples = []
 
-        for couple in weddings_directories:
+        for couple in os.scandir('./assets/weddings'):
             dir_name = re.search('[^/]+$', couple.path).group(0)
             cover_image = working_directory + \
                 couple.path.replace('.', '') + '/Cover/cover.jpg'
