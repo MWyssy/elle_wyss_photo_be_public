@@ -7,7 +7,8 @@ from natsort import natsorted
 
 def create_app():
     app = Flask(__name__)
-    CORS(app)
+    CORS(app, resources={
+         r"/api/*": {"origins": "*", "methods": ["GET", "OPTIONS"], "supports_credentials": True}})
 
     working_directory = os.getcwd()
 
@@ -45,18 +46,20 @@ def create_app():
 
     app.register_blueprint(dynamic_routes_bp)
 
-    @app.route('/portfolio', methods=['GET'])
+    @app.route('/api/portfolio')
     def couples():
         couples = []
 
         for couple in os.scandir('./assets/weddings'):
             dir_name = re.search('[^/]+$', couple.path).group(0)
+            url = '/' + dir_name.lower().replace(' ', '-')
             cover_image = working_directory + \
                 couple.path.replace('.', '') + '/Cover/cover.jpg'
 
             data = {
                 "name": dir_name,
-                "cover_image": cover_image
+                "cover_image": cover_image,
+                "url": url
             }
             couples.append(data)
 
