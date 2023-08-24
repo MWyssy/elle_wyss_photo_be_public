@@ -6,10 +6,11 @@ orbs:
 jobs:
   build-image-and-push:
     working_directory: ~/elle_wyss_photo_be
-    docker/publish:
-      image: mwyssy/ewp-be
-      tag: ${CIRCLE_BUILD_NUM}
-      registry: mwyssy/ewp-be
+    steps:
+      - docker/publish:
+          image: mwyssy/ewp-be
+          tag: ${CIRCLE_BUILD_NUM}
+          registry: mwyssy/ewp-be
       
 workflows:
   jobs:
