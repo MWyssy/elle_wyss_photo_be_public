@@ -7,3 +7,9 @@ workflows:
       - docker/publish:
           image: mwyssy/ewp-be
           tag: ${CIRCLE_BUILD_NUM}
+          registry-url: docker.io
+          repo: mwyssy/ewp-be
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+          additional-tags:
+            - latest
