@@ -15,7 +15,7 @@ resource "oci_objectstorage_bucket" "ewp_image_storage" {
 
 locals {
   image_files = flatten([
-    fileset("assets/weddings", "**/")
+    fileset("../assets/weddings", "**/")
   ])
 }
 
@@ -24,7 +24,7 @@ resource "oci_objectstorage_object" "ewp_image_storage" {
 
   bucket       = oci_objectstorage_bucket.ewp_image_storage.name
   object       = "weddings/${local.image_files[count.index]}"
-  source       = "assets/weddings/${local.image_files[count.index]}"
+  source       = "../assets/weddings/${local.image_files[count.index]}"
   content_type = "image/jpeg"
   namespace    = var.bucket_namespace
 }
