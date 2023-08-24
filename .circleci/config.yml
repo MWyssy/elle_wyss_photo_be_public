@@ -4,16 +4,14 @@ orbs:
 workflows:
   build-and-publish-docker-image:
     jobs:
-      - docker/build:
-          image: mwyssy/ewp-be
-          tag: ${CIRCLE_BUILD_NUM}
       - docker/publish:
           image: mwyssy/ewp-be
           name: Publish Docker image
-          requires:
-            - docker/build
-          auth:
-            username: $DOCKERHUB_USERNAME
-            password: $DOCKERHUB_PASSWORD
           additional-tags:
+            - ${CIRCLE_BUILD_NUM}
             - latest
+          registry-url: docker.io
+          repo: your-username/your-repo-name
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+
