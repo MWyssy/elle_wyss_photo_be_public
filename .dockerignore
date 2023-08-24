@@ -3,3 +3,4 @@ cloud
 .gitignore
 Dockerfile
 README.md
+.circleci
