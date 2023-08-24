@@ -25,7 +25,7 @@ def create_app():
 
     def get_weddings(couple):
         files = []
-        file_path = f"{working_directory}/assets/weddings/{couple}"
+        file_path = f"{working_directory}/cloud/assets/weddings/{couple}"
 
         for images in os.scandir(file_path):
             if images.is_file():
@@ -39,9 +39,9 @@ def create_app():
     dynamic_routes_bp = Blueprint('dynamic_routes', __name__)
 
     with app.app_context():
-        for index, couple in enumerate(os.scandir('./assets/weddings'), start=1):
+        for index, couple in enumerate(os.scandir(f"{working_directory}/cloud/assets/weddings"), start=1):
             dir_name = re.search('[^/]+$', couple.path).group(0)
-            url = '/' + dir_name.lower().replace(' ', '-')
+            url = '/api/' + dir_name.lower().replace(' ', '-')
             generate_endpoint(url, get_weddings(dir_name))
 
     app.register_blueprint(dynamic_routes_bp)
@@ -50,11 +50,11 @@ def create_app():
     def couples():
         couples = []
 
-        for couple in os.scandir('./assets/weddings'):
+        for couple in os.scandir('./cloud/assets/weddings'):
             dir_name = re.search('[^/]+$', couple.path).group(0)
             url = '/' + dir_name.lower().replace(' ', '-')
             cover_image = working_directory + \
-                couple.path.replace('.', '') + '/Cover/cover.jpg'
+                couple.path.replace('.', '') + '/cover.jpg'
 
             data = {
                 "name": dir_name,
