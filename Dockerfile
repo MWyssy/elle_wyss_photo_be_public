@@ -6,9 +6,9 @@ ENV PROJECT_DIR /usr/src/ewpapi
 
 WORKDIR ${PROJECT_DIR}
 
-COPY Pipfile .
-COPY api.py . 
-COPY . .
+COPY Pipfile ${PROJECT_DIR}/
+COPY api.py ${PROJECT_DIR}/ 
+COPY . ${PROJECT_DIR}/assets
 
 RUN pipenv install --deploy
 
