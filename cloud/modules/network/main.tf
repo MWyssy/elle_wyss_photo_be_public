@@ -40,5 +40,30 @@ resource "oci_core_subnet" "ewp_public" {
 
 }
 
+resource "oci_core_security_list" "ewp_security_list" {
+  compartment_id = var.compartment_id
+  vcn_id         = module.vcn.vcn_id
+  display_name   = "ewp_security_list"
+
+  egress_security_rules {
+    protocol    = "all"
+    destination = "0.0.0.0/0"
+  }
+
+  ingress_security_rules {
+    protocol = "6"
+    source   = "${data.external.my_ip.result.MY_IP}/32"
+
+    tcp_options {
+      max = "22"
+      min = "22"
+    }
+  }
+
+  ingress_security_rules {
+    protocol = "all"
+    source   = "0.0.0.0/0"
+  }
+}
 
 

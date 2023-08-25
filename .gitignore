@@ -162,3 +162,4 @@ cython_debug/
 assets
 .terraform
 terraform.tfvars
+env.sh
