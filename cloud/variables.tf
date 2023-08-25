@@ -19,3 +19,7 @@ variable "fingerprint" {
 variable "private_key_path" {
 
 }
+
+variable "compartment" {
+
+}

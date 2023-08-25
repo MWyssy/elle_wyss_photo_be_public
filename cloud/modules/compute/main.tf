@@ -12,7 +12,7 @@ resource "oci_core_instance" "ewp_instance" {
   }
 
   create_vnic_details {
-    subnet_id        = var.subnet_id
+    subnet_id        = count.index == 0 ? var.subnet_id_1 : var.subnet_id_2
     display_name     = "primaryvnic"
     assign_public_ip = true
     hostname_label   = "${var.instance_name}_${count.index + 1}"
@@ -20,12 +20,12 @@ resource "oci_core_instance" "ewp_instance" {
 
   source_details {
     source_type = "image"
-    source_id   = lookup(data.oci_core_images.test_images.images[0], "id")
+    source_id   = lookup(data.oci_core_images.ewp_images.images[0], "id")
   }
 
   metadata = {
     ssh_authorized_keys = var.ssh_public_key
-    user_data           = filebase64("./user_data.sh")
+    user_data           = filebase64("${path.module}/user_data.sh")
   }
 }
 
@@ -67,7 +67,7 @@ resource "oci_load_balancer_backend" "ewp_load_balancer_backend" {
   count = 2
   #Required
   backendset_name  = oci_load_balancer_backend_set.ewp_load_balancer_backend_set.name
-  ip_address       = oci_core_instance.ewp_instance[count.index + 1].ip
+  ip_address       = oci_core_instance.ewp_instance[count.index].public_ip
   load_balancer_id = oci_load_balancer_load_balancer.ewp_load_balancer.id
   port             = "80"
 }
@@ -116,7 +116,6 @@ resource "tls_private_key" "ewp_private_key" {
 }
 
 resource "tls_self_signed_cert" "ewp_self_signed_cert" {
-  key_algorithm   = "ECDSA"
   private_key_pem = tls_private_key.ewp_private_key.private_key_pem
 
   subject {

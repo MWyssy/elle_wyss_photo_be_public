@@ -1,5 +1,6 @@
 resource "null_resource" "docker_config" {
-  count = 2
+  depends_on = [oci_core_instance.ewp_instance, oci_load_balancer_load_balancer.ewp_load_balancer]
+  count      = 2
 
   provisioner "file" {
     source      = "./user_data.sh"
@@ -8,7 +9,7 @@ resource "null_resource" "docker_config" {
     connection {
       type = "ssh"
       user = "docker"
-      host = var.subnet_id[count.index + 1].id
+      host = count.index == 0 ? var.subnet_ip_1 : var.subnet_ip_2
     }
   }
 
@@ -19,7 +20,7 @@ resource "null_resource" "docker_config" {
     connection {
       type = "ssh"
       user = "docker"
-      host = var.subnet_id[count.index + 1].id
+      host = count.index == 0 ? var.subnet_ip_1 : var.subnet_ip_2
     }
   }
 
@@ -32,7 +33,7 @@ resource "null_resource" "docker_config" {
     connection {
       type = "ssh"
       user = "docker"
-      host = var.subnet_id[count.index + 1].id
+      host = count.index == 0 ? var.subnet_ip_1 : var.subnet_ip_2
     }
   }
 }
