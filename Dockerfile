@@ -10,8 +10,6 @@ COPY Pipfile ${PROJECT_DIR}/
 COPY api.py ${PROJECT_DIR}/ 
 COPY assets ${PROJECT_DIR}/assets
 
-RUN ls
-
 RUN pipenv install --deploy
 
 EXPOSE 5000
