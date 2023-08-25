@@ -8,7 +8,7 @@ WORKDIR ${PROJECT_DIR}
 
 COPY Pipfile ${PROJECT_DIR}/
 COPY api.py ${PROJECT_DIR}/ 
-COPY . ${PROJECT_DIR}/assets
+COPY . ${PROJECT_DIR}/
 
 RUN pipenv install --deploy
 
