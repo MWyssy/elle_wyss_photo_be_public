@@ -7,4 +7,4 @@ workflows:
     jobs:
       - docker/publish:
           image: mwyssy/ewp-be
-          tag: latest, ${CIRCLE_BUILD_NUM}
+          tag: latest,1.${CIRCLE_BUILD_NUM}
