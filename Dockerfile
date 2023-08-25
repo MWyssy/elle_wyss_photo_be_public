@@ -8,7 +8,7 @@ WORKDIR ${PROJECT_DIR}
 
 COPY Pipfile ${PROJECT_DIR}/
 COPY api.py ${PROJECT_DIR}/ 
-COPY . ${PROJECT_DIR}/
+COPY assets ${PROJECT_DIR}/assets
 
 RUN ls
 
