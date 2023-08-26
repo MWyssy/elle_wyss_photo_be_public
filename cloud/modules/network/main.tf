@@ -19,27 +19,6 @@ module "vcn" {
 
 }
 
-resource "oci_core_subnet" "ewp_public" {
-  count = 2
-
-  cidr_block     = "10.0.${count.index + 1}.0/24"
-  compartment_id = var.compartment_id
-  vcn_id         = module.vcn.vcn_id
-
-  prohibit_internet_ingress  = false
-  prohibit_public_ip_on_vnic = false
-
-  dns_label = "${var.subnet_dns_label}${count.index}"
-
-  route_table_id = module.vcn.ig_route_id
-
-  freeform_tags = {
-    "CreatedBy" = "Terraform",
-    "UsedBy"    = "Elle Wyss Photography"
-  }
-
-}
-
 resource "oci_core_security_list" "ewp_security_list" {
   compartment_id = var.compartment_id
   vcn_id         = module.vcn.vcn_id
@@ -65,5 +44,29 @@ resource "oci_core_security_list" "ewp_security_list" {
     source   = "0.0.0.0/0"
   }
 }
+
+resource "oci_core_subnet" "ewp_public" {
+  count = 2
+
+  cidr_block     = "10.0.${count.index + 1}.0/24"
+  compartment_id = var.compartment_id
+  vcn_id         = module.vcn.vcn_id
+
+  prohibit_internet_ingress  = false
+  prohibit_public_ip_on_vnic = false
+
+  dns_label = "${var.subnet_dns_label}${count.index}"
+
+  route_table_id = module.vcn.ig_route_id
+
+  security_list_ids = [oci_core_security_list.ewp_security_list.id]
+
+  freeform_tags = {
+    "CreatedBy" = "Terraform",
+    "UsedBy"    = "Elle Wyss Photography"
+  }
+
+}
+
 
 

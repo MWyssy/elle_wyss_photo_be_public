@@ -1,31 +1,24 @@
 resource "oci_core_instance" "ewp_instance" {
-  count = 2
-
-  availability_domain = data.oci_identity_availability_domain.ad.name
+  for_each            = local.nodes
+  display_name        = each.value.node_name
+  availability_domain = data.oci_identity_availability_domains.ad.compartment_id
   compartment_id      = var.compartment
-  display_name        = "${var.instance_name}_${count.index + 1}"
   shape               = var.instance_shape
-
   shape_config {
-    ocpus         = var.instance_ocpus
     memory_in_gbs = var.instance_shape_config_memory_in_gbs
+    ocpus         = var.instance_ocpus
   }
-
-  create_vnic_details {
-    subnet_id        = count.index == 0 ? var.subnet_id_1 : var.subnet_id_2
-    display_name     = "primaryvnic"
-    assign_public_ip = true
-    hostname_label   = "${var.instance_name}_${count.index + 1}"
-  }
-
   source_details {
-    source_type = "image"
-    source_id   = lookup(data.oci_core_images.ewp_images.images[0], "id")
+    source_id               = data.oci_core_images.ewp_images.images[0].id
+    source_type             = "image"
+    boot_volume_size_in_gbs = 30000
   }
-
+  create_vnic_details {
+    subnet_id  = each.value.subnet_id
+    private_ip = each.value.ip_address
+  }
   metadata = {
-    ssh_authorized_keys = var.ssh_public_key
-    user_data           = filebase64("${path.module}/user_data.sh")
+    user_data = filebase64("${path.module}/user_data.sh")
   }
 }
 
@@ -160,5 +153,16 @@ resource "oci_load_balancer_listener" "ewp_load_balancer_listener" {
   ssl_configuration {
     certificate_name        = oci_load_balancer_certificate.load_balancer_certificate.certificate_name
     verify_peer_certificate = false
+  }
+}
+
+locals {
+  nodes = {
+    for i in range(var.how_many_nodes) :
+    i => {
+      node_name  = "${var.instance_name}_${i + 1}"
+      ip_address = format("10.0.0.%d", 10 + (i + 1))
+      subnet_id  = var.subnet_ids[i]
+    }
   }
 }

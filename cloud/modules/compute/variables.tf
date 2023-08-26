@@ -6,12 +6,8 @@ variable "subnet_id_2" {
   type = string
 }
 
-variable "subnet_ip_1" {
-  type = string
-}
+variable "subnet_ids" {
 
-variable "subnet_ip_2" {
-  type = string
 }
 
 variable "compartment" {
@@ -30,10 +26,6 @@ variable "instance_shape_config_memory_in_gbs" {
   default = 6
 }
 
-variable "ssh_public_key" {
-  type = string
-}
-
 variable "lb_name" {
   type = string
 }
@@ -48,4 +40,8 @@ variable "lb_host_name" {
 
 variable "tenancy_ocid" {
   type = string
+}
+
+variable "how_many_nodes" {
+
 }

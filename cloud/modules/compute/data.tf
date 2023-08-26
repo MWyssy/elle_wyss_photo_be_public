@@ -7,7 +7,6 @@ data "oci_core_images" "ewp_images" {
   sort_order               = "DESC"
 }
 
-data "oci_identity_availability_domain" "ad" {
+data "oci_identity_availability_domains" "ad" {
   compartment_id = var.tenancy_ocid
-  ad_number      = 1
 }
