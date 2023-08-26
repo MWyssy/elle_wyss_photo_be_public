@@ -15,7 +15,7 @@ jobs:
       - run:
           command: |
             sudo mkdir /root/.oci 
-            sudo echo -e "[DEFAULT]\nuser=${OCI_USER}\nfingerprint=${OCI_FINGERPRINT}\ntenancy=${OCI_TENANCY}\nregion=${OCI_REGION}" > ~/.oci/config
+            sudo echo -e "[DEFAULT]\nuser=${OCI_USER}\nfingerprint=${OCI_FINGERPRINT}\ntenancy=${OCI_TENANCY}\nregion=${OCI_REGION}" > /root/.oci/config
       - docker/push:
           image: mwyssy/ewp-be
           tag: latest,1.${CIRCLE_BUILD_NUM}
