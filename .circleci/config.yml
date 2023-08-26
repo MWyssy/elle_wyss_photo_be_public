@@ -6,9 +6,12 @@ jobs:
   build-and-publish-docker-image:
     executor: docker/docker
     steps:
+      - setup_remote_docker
       - checkout
+      - docker/check
       - docker/build:
           image: mwyssy/ewp-be
+          tag: 1.${CIRCLE_BUILD_NUM}
       - run:
           command: |
             echo -e "[DEFAULT]\nuser=${OCI_USER}\nfingerprint=${OCI_FINGERPRINT}\ntenancy=${OCI_TENANCY}\nregion=${OCI_REGION}" > ~/.oci/config
