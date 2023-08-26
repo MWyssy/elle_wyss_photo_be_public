@@ -20,13 +20,13 @@ module "network" {
 module "compute" {
   source         = "./modules/compute"
   depends_on     = [module.network]
-  how_many_nodes = 2
+  how_many_nodes = 1
 
-  subnet_id_1    = module.network.subnet_id_1
-  subnet_id_2    = module.network.subnet_id_2
-  subnet_ids     = [module.network.subnet_id_1, module.network.subnet_id_2]
+  subnet_id_1 = module.network.subnet_id_1
+  # subnet_id_2    = module.network.subnet_id_2
+  subnet_ids     = [module.network.subnet_id_1]
   compartment    = var.compartment
-  instance_shape = "VM.Standard.A1.Flex"
+  instance_shape = "VM.Standard.E2.1.Micro"
   lb_name        = "ewp_lb"
   instance_name  = "ewp_instance"
   lb_host_name   = "ewp-api"

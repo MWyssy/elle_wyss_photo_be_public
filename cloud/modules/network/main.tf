@@ -12,6 +12,7 @@ module "vcn" {
   create_nat_gateway       = true
   nat_gateway_display_name = var.ng_name
 
+
   freeform_tags = {
     "CreatedBy" = "Terraform",
     "UsedBy"    = "Elle Wyss Photography"
@@ -46,7 +47,7 @@ resource "oci_core_security_list" "ewp_security_list" {
 }
 
 resource "oci_core_subnet" "ewp_public" {
-  count = 2
+  count = 1
 
   cidr_block     = "10.0.${count.index + 1}.0/24"
   compartment_id = var.compartment_id

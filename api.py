@@ -1,8 +1,12 @@
 import os
 import oci
 import re
-from flask import Flask, jsonify, Blueprint, Response
+from flask import Flask, jsonify, Blueprint, Response, json
 from flask_cors import CORS
+import pandas as pd
+
+config = oci.config.from_file()  # Load the OCI config from the default location
+object_storage_client = oci.object_storage.ObjectStorageClient(config)
 
 
 def create_app():
@@ -11,7 +15,20 @@ def create_app():
     CORS(app, resources={
          r"/api/*": {"origins": "*", "methods": ["GET", "OPTIONS"], "supports_credentials": True}})
 
-    working_directory = os.getcwd()
+    find_directories = []
+
+    list_objects_response = object_storage_client.list_objects(
+        "lr4poue3hwjl", "ewp_image_store")
+    objects = list_objects_response.data.objects
+
+    for object in objects:
+        match = re.search(
+            r'\/([^\/]+)\/', object.name)
+        if match:
+            dir_name = match.group(1)
+            find_directories.append(dir_name)
+
+    directories = pd.Series(find_directories).drop_duplicates().tolist()
 
     # Root route
     @app.route('/', methods=['GET'])
@@ -26,27 +43,19 @@ def create_app():
         dynamic_endpoint.__name__ = f"{endpoint}"
         app.add_url_rule(endpoint, view_func=dynamic_endpoint)
 
-    # Get images from OCI bucket
-
-    def get_image(couple, image):
-        couple_endpoint = couple.replace(' ', '%20')
-        url = "https://objectstorage.uk-london-1.oraclecloud.com/n/lr4poue3hwjl/b/ewp_image_store/o/weddings%2F"
-
-        return f"{url}{couple_endpoint}%2f{image}.jpg"
-
     # Get Couple Folders function
     def get_weddings(couple):
         files = 0
-        file_path = f"{working_directory}/assets/weddings/{couple}"
+
         images = []
-        url = f"https://objectstorage.uk-london-1.oraclecloud.com/n/lr4poue3hwjl/b/ewp_image_store/o/weddings%2F{couple.replace(' ', '%20')}%2F"
+        url = f"https://objectstorage.uk-london-1.oraclecloud.com/n/lr4poue3hwjl/b/ewp_image_store/o/"
 
-        for image in os.scandir(file_path):
-            if image.is_file():
-                files += 1
-
-        for x in range(files - 1):
-            images.append(f"{url}{x + 1}.jpg")
+        for object in objects:
+            object_directory = re.search(
+                r'\/([^\/]+)\/', object.name).group(1)
+            if object_directory == couple:
+                images.append(
+                    f"{url}{object.name.replace(' ', '%20').replace('/', '%2f')}")
 
         couple_data = {couple: images}
 
@@ -56,8 +65,8 @@ def create_app():
 
     # Create endpoints
     with app.app_context():
-        for index, couple in enumerate(os.scandir(f"{working_directory}/assets/weddings"), start=1):
-            dir_name = re.search('[^/]+$', couple.path).group(0)
+        for index, couple in enumerate(directories, start=1):
+            dir_name = directories[index - 1]
             url = '/api/' + dir_name.lower().replace(' ', '-')
             couple_data = get_weddings(dir_name)
             generate_endpoint(url, couple_data)
@@ -69,8 +78,7 @@ def create_app():
     def couples():
         couples = []
 
-        for couple in os.scandir('./assets/weddings'):
-            couple = re.search('[^/]+$', couple.path).group(0)
+        for couple in directories:
             url = '/' + couple.lower().replace(' ', '-')
             cover_image = f"https://objectstorage.uk-london-1.oraclecloud.com/n/lr4poue3hwjl/b/ewp_image_store/o/weddings%2F{couple.replace(' ', '%20')}%2Fcover.jpg"
 

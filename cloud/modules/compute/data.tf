@@ -10,3 +10,8 @@ data "oci_core_images" "ewp_images" {
 data "oci_identity_availability_domains" "ad" {
   compartment_id = var.tenancy_ocid
 }
+
+data "template_file" "ad_names" {
+  count    = 3
+  template = lookup(data.oci_identity_availability_domains.ad.availability_domains[count.index], "name")
+}

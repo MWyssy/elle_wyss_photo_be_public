@@ -2,9 +2,9 @@ variable "subnet_id_1" {
   type = string
 }
 
-variable "subnet_id_2" {
-  type = string
-}
+# variable "subnet_id_2" {
+#   type = string
+# }
 
 variable "subnet_ids" {
 
@@ -23,7 +23,7 @@ variable "instance_ocpus" {
 }
 
 variable "instance_shape_config_memory_in_gbs" {
-  default = 6
+  default = 1
 }
 
 variable "lb_name" {
@@ -45,3 +45,4 @@ variable "tenancy_ocid" {
 variable "how_many_nodes" {
 
 }
+
