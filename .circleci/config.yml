@@ -2,9 +2,23 @@ version: 2.1
 orbs:
   docker: circleci/docker@2.2.0
 
+jobs:
+  build-and-publish-docker-image:
+    executor: docker/docker
+    steps:
+      - checkout
+      - docker/build:
+          image: mwyssy/ewp-be
+      - run:
+          command: |
+            echo -e "[DEFAULT]\nuser=${OCI_USER}\nfingerprint=${OCI_FINGERPRINT}\ntenancy=${OCI_TENANCY}\nregion=${OCI_REGION}" > ~/.oci/config
+      - docker/push:
+          image: mwyssy/ewp-be
+          tag: latest,1.${CIRCLE_BUILD_NUM}
+
 workflows:
   build-and-publish-docker-image:
     jobs:
-      - docker/publish:
-          image: mwyssy/ewp-be
-          tag: latest,1.${CIRCLE_BUILD_NUM}
+      - docker/publish
+          
+          
