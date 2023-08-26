@@ -17,8 +17,9 @@ jobs:
           tag: latest,1.${CIRCLE_BUILD_NUM}
 
 workflows:
-  build-and-publish-docker-image:
+  commit:
     jobs:
-      - docker/publish
+      - build-and-publish-docker-image
+
           
           
