@@ -11,6 +11,7 @@ flask-restful = "*"
 flask-cors = "*"
 prometheus-flask-exporter = "*"
 oci = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.8"
