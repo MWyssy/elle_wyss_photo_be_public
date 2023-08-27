@@ -6,7 +6,7 @@ from flask_cors import CORS
 import pandas as pd
 
 # Load the OCI config from the default location
-config = oci.config.from_file('./config')
+config = oci.config.from_file(file_location="./config")
 object_storage_client = oci.object_storage.ObjectStorageClient(config)
 
 
