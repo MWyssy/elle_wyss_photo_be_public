@@ -14,10 +14,11 @@ jobs:
           tag: latest,1.${CIRCLE_BUILD_NUM}
       - run:
           command: |
-            echo -e "[DEFAULT]\nuser=${OCI_USER}\nfingerprint=${OCI_FINGERPRINT}\ntenancy=${OCI_TENANCY}\nregion=${OCI_REGION}\nkey_file=./oci/mike@wyss.co.uk_2023-08-23T20 03 55.964Z.pem" > .oci/config
-            ls -a
-            ls .oci
-            cat .oci/config
+            export OCI_USER=$OCI_USER
+            export OCI_KEY=/.oci/mike@wyss.co.uk_2023-08-23T20\ 03\ 55.964Z.pem
+            export OCI_FINGERPRINT=$OCI_FINGERPRINT
+            export OCI_TENANCY=$OCI_TENANCY
+            export OCI_REGION=$OCI_REGION
       - docker/push:
           image: mwyssy/ewp-be
           tag: latest,1.${CIRCLE_BUILD_NUM}
