@@ -18,6 +18,7 @@ jobs:
             echo -e "[DEFAULT]\nuser=${OCI_USER}\nfingerprint=${OCI_FINGERPRINT}\ntenancy=${OCI_TENANCY}\nregion=${OCI_REGION}" > .oci/config
             ls -a
             ls .oci
+            cat .oci/config
       - docker/push:
           image: mwyssy/ewp-be
           tag: latest,1.${CIRCLE_BUILD_NUM}
