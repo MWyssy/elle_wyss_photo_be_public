@@ -8,7 +8,7 @@ WORKDIR ${PROJECT_DIR}
 
 COPY Pipfile ${PROJECT_DIR}/
 COPY api.py ${PROJECT_DIR}/ 
-COPY oci ${PROJECT_DIR}/
+COPY .oci ${PROJECT_DIR}/.oci
 
 RUN pipenv install --deploy
 

@@ -8,7 +8,7 @@ import pandas as pd
 # Load the OCI config from the default location
 config = {
     "user": os.environ["OCI_USER"],
-    "key_file": f"{os.path.dirname(os.path.abspath(__file__))}/oci/mike@wyss.co.uk_2023-08-23T20 03 55.964Z.pem",
+    "key_file": f"{os.path.dirname(os.path.abspath(__file__))}/.oci/mike@wyss.co.uk_2023-08-23T20 03 55.964Z.pem",
     "fingerprint": os.environ["OCI_FINGERPRINT"],
     "tenancy": os.environ["OCI_TENANCY"],
     "region": os.environ["OCI_REGION"]
