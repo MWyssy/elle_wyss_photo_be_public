@@ -15,7 +15,7 @@ jobs:
       - run:
           command: |
             mkdir .oci
-            echo -e "[DEFAULT]\nuser=${OCI_USER}\nfingerprint=${OCI_FINGERPRINT}\ntenancy=${OCI_TENANCY}\nregion=${OCI_REGION}" > .oci/config
+            echo -e "[DEFAULT]\nuser=${OCI_USER}\nfingerprint=${OCI_FINGERPRINT}\ntenancy=${OCI_TENANCY}\nregion=${OCI_REGION}\nkey_file=./oci/mike@wyss.co.uk_2023-08-23T20 03 55.964Z.pem" > .oci/config
             ls -a
             ls .oci
             cat .oci/config
