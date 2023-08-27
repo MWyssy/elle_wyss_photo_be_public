@@ -5,7 +5,8 @@ from flask import Flask, jsonify, Blueprint, Response, json
 from flask_cors import CORS
 import pandas as pd
 
-config = oci.config.from_file()  # Load the OCI config from the default location
+# Load the OCI config from the default location
+config = oci.config.from_file('~/.oci/config')
 object_storage_client = oci.object_storage.ObjectStorageClient(config)
 
 
