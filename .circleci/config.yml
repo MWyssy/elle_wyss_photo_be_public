@@ -16,6 +16,7 @@ jobs:
           command: |
             mkdir .oci 
             echo -e "[DEFAULT]\nuser=${OCI_USER}\nfingerprint=${OCI_FINGERPRINT}\ntenancy=${OCI_TENANCY}\nregion=${OCI_REGION}" > .oci/config
+            sudo mkdir /root/.oci
             sudo mv .oci /root/.oci
       - docker/push:
           image: mwyssy/ewp-be
