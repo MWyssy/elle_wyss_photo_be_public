@@ -163,3 +163,4 @@ cython_debug/
 terraform.tfvars
 env.sh
 assets
+config
