@@ -2,9 +2,9 @@ variable "subnet_id_1" {
   type = string
 }
 
-# variable "subnet_id_2" {
-#   type = string
-# }
+variable "subnet_id_2" {
+  type = string
+}
 
 variable "subnet_ids" {
 
@@ -47,5 +47,13 @@ variable "how_many_nodes" {
 }
 
 variable "security_group" {
+
+}
+
+variable "lb_bes" {
+
+}
+
+variable "lb_listener" {
 
 }

@@ -43,6 +43,12 @@ def create_app():
         text = "Hello there!"
         return jsonify({"message": text})
 
+    # Health Check route
+    @app.route('/health', methods=['GET'])
+    def health():
+        text = "Server Running!"
+        return jsonify({"message": text})
+
     # Generate Endpoint function
     def generate_endpoint(endpoint, data):
         def dynamic_endpoint():

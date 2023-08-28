@@ -47,7 +47,7 @@ resource "oci_core_security_list" "ewp_security_list" {
 }
 
 resource "oci_core_subnet" "ewp_public" {
-  count = 1
+  count = 2
 
   cidr_block     = "10.0.${count.index + 1}.0/24"
   compartment_id = var.compartment_id

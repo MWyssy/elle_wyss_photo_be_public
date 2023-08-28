@@ -24,9 +24,9 @@ module "compute" {
   depends_on     = [module.network]
   how_many_nodes = 1
 
-  subnet_id_1 = module.network.subnet_id_1
-  # subnet_id_2    = module.network.subnet_id_2
-  subnet_ids     = [module.network.subnet_id_1]
+  subnet_id_1    = module.network.subnet_id_1
+  subnet_id_2    = module.network.subnet_id_2
+  subnet_ids     = [module.network.subnet_id_1, module.network.subnet_id_2]
   compartment    = var.compartment
   instance_shape = "VM.Standard.E2.1.Micro"
   lb_name        = "ewp_lb"
@@ -34,4 +34,6 @@ module "compute" {
   lb_host_name   = "ewp-api"
   tenancy_ocid   = var.tenancy_ocid
   security_group = module.network.security_group
+  lb_bes         = "ewp_backendset"
+  lb_listener    = "ewp_lb_listener"
 }

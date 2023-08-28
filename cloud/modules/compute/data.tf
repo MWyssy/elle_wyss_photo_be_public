@@ -15,3 +15,10 @@ data "template_file" "ad_names" {
   count    = 3
   template = lookup(data.oci_identity_availability_domains.ad.availability_domains[count.index], "name")
 }
+
+data "oci_core_private_ips" "ewp" {
+  depends_on = [oci_core_instance.ewp_instance]
+  for_each   = local.nodes
+
+  subnet_id = var.subnet_ids[each.key]
+}
