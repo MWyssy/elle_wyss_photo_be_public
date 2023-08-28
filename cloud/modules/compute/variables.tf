@@ -46,3 +46,6 @@ variable "how_many_nodes" {
 
 }
 
+variable "security_group" {
+
+}

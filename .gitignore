@@ -164,4 +164,4 @@ terraform.tfvars
 env.sh
 assets
 config
-user_data
+user_data.sh

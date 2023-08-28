@@ -69,5 +69,93 @@ resource "oci_core_subnet" "ewp_public" {
 
 }
 
+resource "oci_core_network_security_group" "ewp_sg" {
+  compartment_id = var.compartment_id
+  vcn_id         = module.vcn.vcn_id
+  display_name   = var.security_group_name
 
+}
 
+resource "oci_core_network_security_group_security_rule" "ingress_http" {
+  network_security_group_id = oci_core_network_security_group.ewp_sg.id
+  direction                 = "INGRESS"
+
+  protocol = "6"
+  source   = "0.0.0.0/0"
+  tcp_options {
+    destination_port_range {
+      max = "80"
+      min = "80"
+    }
+  }
+}
+
+resource "oci_core_network_security_group_security_rule" "ingress_https" {
+  network_security_group_id = oci_core_network_security_group.ewp_sg.id
+  direction                 = "INGRESS"
+
+  protocol = "6"
+  source   = "0.0.0.0/0"
+  tcp_options {
+    destination_port_range {
+      max = "443"
+      min = "443"
+    }
+  }
+}
+
+resource "oci_core_network_security_group_security_rule" "ingress_ssh" {
+  network_security_group_id = oci_core_network_security_group.ewp_sg.id
+  direction                 = "INGRESS"
+
+  protocol = "6"
+  source   = "${data.external.my_ip.result.MY_IP}/32"
+  tcp_options {
+    destination_port_range {
+      max = "22"
+      min = "22"
+    }
+  }
+}
+
+resource "oci_core_network_security_group_security_rule" "egress_port" {
+  network_security_group_id = oci_core_network_security_group.ewp_sg.id
+  direction                 = "EGRESS"
+
+  protocol    = "6"
+  destination = "0.0.0.0/0"
+  tcp_options {
+    destination_port_range {
+      max = "5000"
+      min = "5000"
+    }
+  }
+}
+
+resource "oci_core_network_security_group_security_rule" "egress_internet" {
+  network_security_group_id = oci_core_network_security_group.ewp_sg.id
+  direction                 = "EGRESS"
+
+  protocol    = "6"
+  destination = "0.0.0.0/0"
+  tcp_options {
+    destination_port_range {
+      max = "443"
+      min = "443"
+    }
+  }
+}
+
+resource "oci_core_network_security_group_security_rule" "ingress_api" {
+  network_security_group_id = oci_core_network_security_group.ewp_sg.id
+  direction                 = "INGRESS"
+
+  protocol = "6"
+  source   = "0.0.0.0/0"
+  tcp_options {
+    destination_port_range {
+      max = "5000"
+      min = "5000"
+    }
+  }
+}

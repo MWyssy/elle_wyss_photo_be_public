@@ -4,24 +4,27 @@ resource "oci_core_instance" "ewp_instance" {
   availability_domain = data.template_file.ad_names[each.key].rendered
   compartment_id      = var.compartment
   shape               = var.instance_shape
+
   shape_config {
     memory_in_gbs = var.instance_shape_config_memory_in_gbs
     ocpus         = var.instance_ocpus
   }
   source_details {
-    source_id               = data.oci_core_images.ewp_images.images[0].id
-    source_type             = "image"
-    boot_volume_size_in_gbs = 30000
+    source_id   = data.oci_core_images.ewp_images.images[0].id
+    source_type = "image"
   }
   create_vnic_details {
     subnet_id  = each.value.subnet_id
     private_ip = each.value.ip_address
+    nsg_ids    = ["${var.security_group}"]
   }
   metadata = {
-    user_data           = filebase64("./user_data.sh")
-    ssh_authorized_keys = file("/home/mike/software_dev/eli_website/elle_wyss_photo_be/cloud/id_rsa.pub")
+    user_data           = filebase64("${path.module}/user_data.sh")
+    ssh_authorized_keys = file("/home/mike/.ssh/id_rsa.pub")
   }
 }
+
+
 
 locals {
   nodes = {

@@ -17,3 +17,7 @@ variable "vcn_dns_label" {
 variable "subnet_dns_label" {
   type = string
 }
+
+variable "security_group_name" {
+
+}

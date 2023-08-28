@@ -15,6 +15,8 @@ module "network" {
 
   vcn_dns_label    = "apivcn"
   subnet_dns_label = "ewp"
+
+  security_group_name = "ewp_sg"
 }
 
 module "compute" {
@@ -31,4 +33,5 @@ module "compute" {
   instance_name  = "ewp_instance"
   lb_host_name   = "ewp-api"
   tenancy_ocid   = var.tenancy_ocid
+  security_group = module.network.security_group
 }
