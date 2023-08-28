@@ -55,7 +55,7 @@ def create_app():
         files = 0
 
         images = []
-        url = f"https://objectstorage.uk-london-1.oraclecloud.com/n/lr4poue3hwjl/b/ewp_image_store/o/"
+        url = f"https://lr4poue3hwjl.objectstorage.uk-london-1.oci.customer-oci.com/n/lr4poue3hwjl/b/ewp_image_store/o/"
 
         for object in objects:
             object_directory = re.search(
@@ -87,7 +87,7 @@ def create_app():
 
         for couple in directories:
             url = '/' + couple.lower().replace(' ', '-')
-            cover_image = f"https://objectstorage.uk-london-1.oraclecloud.com/n/lr4poue3hwjl/b/ewp_image_store/o/weddings%2F{couple.replace(' ', '%20')}%2Fcover.jpg"
+            cover_image = f"https://lr4poue3hwjl.objectstorage.uk-london-1.oci.customer-oci.com/n/lr4poue3hwjl/b/ewp_image_store/o/weddings%2F{couple.replace(' ', '%20')}%2Fcover.jpg"
 
             data = {
                 "name": couple,
