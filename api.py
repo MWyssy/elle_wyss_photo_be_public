@@ -58,8 +58,6 @@ def create_app():
 
     # Get Couple Folders function
     def get_weddings(couple):
-        files = 0
-
         images = []
         url = f"https://lr4poue3hwjl.objectstorage.uk-london-1.oci.customer-oci.com/n/lr4poue3hwjl/b/ewp_image_store/o/"
 
@@ -70,7 +68,18 @@ def create_app():
                 images.append(
                     f"{url}{object.name.replace(' ', '%20').replace('/', '%2f')}")
 
-        couple_data = {couple: images}
+        def sort(elem):
+            file_num_match = re.search(
+                r'(\d+)(?=\.jpg$)', elem)
+            if file_num_match:
+                file_num = int(file_num_match.group(1))
+                return file_num
+            return 0
+
+        sortedImages = sorted(images, key=sort)
+        sortedImages.pop(0)
+
+        couple_data = {couple: sortedImages}
 
         return couple_data
 
