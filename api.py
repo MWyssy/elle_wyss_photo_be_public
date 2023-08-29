@@ -38,7 +38,7 @@ def create_app():
     directories = pd.Series(find_directories).drop_duplicates().tolist()
 
     # Root route
-    @app.route('/', methods=['GET'])
+    @app.route('/api', methods=['GET'])
     def hello():
         text = "Hello there!"
         return jsonify({"message": text})
