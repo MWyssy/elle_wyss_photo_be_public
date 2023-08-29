@@ -132,6 +132,20 @@ resource "oci_core_network_security_group_security_rule" "egress_port" {
   }
 }
 
+resource "oci_core_network_security_group_security_rule" "egress_watchtower" {
+  network_security_group_id = oci_core_network_security_group.ewp_sg.id
+  direction                 = "EGRESS"
+
+  protocol    = "6"
+  destination = "0.0.0.0/0"
+  tcp_options {
+    destination_port_range {
+      max = "8080"
+      min = "8080"
+    }
+  }
+}
+
 resource "oci_core_network_security_group_security_rule" "egress_internet" {
   network_security_group_id = oci_core_network_security_group.ewp_sg.id
   direction                 = "EGRESS"
@@ -156,6 +170,20 @@ resource "oci_core_network_security_group_security_rule" "ingress_api" {
     destination_port_range {
       max = "5000"
       min = "5000"
+    }
+  }
+}
+
+resource "oci_core_network_security_group_security_rule" "ingress_watchtower" {
+  network_security_group_id = oci_core_network_security_group.ewp_sg.id
+  direction                 = "INGRESS"
+
+  protocol = "6"
+  source   = "0.0.0.0/0"
+  tcp_options {
+    destination_port_range {
+      max = "8080"
+      min = "8080"
     }
   }
 }
